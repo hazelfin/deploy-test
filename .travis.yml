@@ -1,0 +1,61 @@
+# language: c
+# os: osx
+os: linux
+
+
+# cache:
+#   directories:
+#   - $HOME/.local
+
+# before_install:
+#   - pip install --local awscli
+#   - export PATH=$PATH:$HOME/.local/bin
+
+
+# addons:
+#   apt:
+#     packages:
+#       - hugo
+
+# cache:
+#   directories:
+#   - tmp/.htmltest
+
+# before_script:
+#   # - brew update && brew install hugo
+#   # - apt-get install hugo
+#   # - curl https://htmltest.wjdp.uk | bash -s -- -b tmp
+#   - curl -sL `curl -s https://api.github.com/repos/wjdp/htmltest/releases/latest | jq -r '.assets[] | select(.name | test("linux_amd64.tar.gz"; "ix")) | .browser_download_url'` | tar -xz
+#   - curl -sL `curl -s https://api.github.com/repos/gohugoio/hugo/releases/latest | jq -r '.assets[] | select(.name | test("linux-64bit.tar.gz"; "ix")) | .browser_download_url'` | tar -xz
+
+script:
+  - make
+
+branches:
+  only:
+    - master
+
+notifications:
+  email:
+    on_success: false
+    on_failure: always
+
+deploy:
+  provider: script
+  script:
+  - make deploy
+  on:
+    branch: master
+    tags: true
+
+
+# deploy:
+#   provider: pages
+#   skip_cleanup: true
+#   local_dir: public
+#   github_token: $GITHUB_TOKEN
+#   on:
+#     branch: master
+#   repo: tcurdt/base-ci
+#   target_branch: master
+#   # fqdn: vafer.org
